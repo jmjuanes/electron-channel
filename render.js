@@ -30,12 +30,26 @@ module.exports = function(channel, data, listener)
   return ipcRenderer.send('channel-request', channel, id, data);
 };
 
+//Send the request without callback
+module.exports.once = function(channel, data)
+{
+  //Send the request
+  return ipcRenderer.send('channel-request', channel, '', data);
+};
+
 //Add our channel listener
 ipcRenderer.on('channel-response', function(event, id, args)
 {
-  //Do the callback
-  _requests[id].apply(null, args);
+  //Check the id value
+  if(id === ''){ return; }
 
-  //Delete the request listener
-  delete _requests[id];
+  //Check if the id exists
+  if(typeof _requests[id] === 'function')
+  {
+    //Do the callback
+    _requests[id].apply(null, args);
+
+    //Delete the request listener
+    delete _requests[id];
+  }
 });
