@@ -14,7 +14,7 @@ module.exports = function(channel, data, listener)
   if(typeof data === 'function' && typeof listener !== 'function')
   {
     //Save the listener function
-    var listener = data;
+    listener = data;
 
     //Reset the data
     data = {};
